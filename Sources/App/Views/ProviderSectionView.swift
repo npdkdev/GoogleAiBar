@@ -1,8 +1,6 @@
 import SwiftUI
 import Domain
 
-/// A section showing all quotas for a single AI provider.
-/// Uses the rich UsageSnapshot domain model directly.
 struct ProviderSectionView: View {
     let snapshot: UsageSnapshot
 
@@ -26,11 +24,10 @@ struct ProviderSectionView: View {
                 }
             }
 
-            // Quota grid
-            LazyVGrid(columns: gridColumns, spacing: 8) {
-                ForEach(snapshot.quotas, id: \.quotaType) { quota in
-                    QuotaCardView(quota: quota)
-                }
+            if hasMultipleAccounts {
+                multiAccountView
+            } else {
+                singleAccountQuotaGrid(quotas: snapshot.quotas)
             }
 
             // Age indicator
@@ -47,6 +44,52 @@ struct ProviderSectionView: View {
             }
         }
         .padding()
+    }
+
+    private var hasMultipleAccounts: Bool {
+        let emails = Set(snapshot.quotas.compactMap { $0.accountEmail })
+        return emails.count > 1
+    }
+
+    private var accountGroups: [(email: String, quotas: [UsageQuota])] {
+        var groups: [(email: String, quotas: [UsageQuota])] = []
+        var seen: [String: Int] = [:]
+        for quota in snapshot.quotas {
+            let key = quota.accountEmail ?? ""
+            if let idx = seen[key] {
+                groups[idx].quotas.append(quota)
+            } else {
+                seen[key] = groups.count
+                groups.append((email: quota.accountEmail ?? "", quotas: [quota]))
+            }
+        }
+        return groups
+    }
+
+    @ViewBuilder
+    private var multiAccountView: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(accountGroups, id: \.email) { group in
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(group.email)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+
+                    singleAccountQuotaGrid(quotas: group.quotas)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func singleAccountQuotaGrid(quotas: [UsageQuota]) -> some View {
+        LazyVGrid(columns: gridColumns, spacing: 6) {
+            ForEach(quotas, id: \.quotaType) { quota in
+                QuotaCardView(quota: quota)
+            }
+        }
     }
 
     private var gridColumns: [GridItem] {

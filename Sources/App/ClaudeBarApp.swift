@@ -64,7 +64,13 @@ struct ClaudeBarApp: App {
                 settingsRepository: settingsRepository
             ),
             GeminiProvider(probe: GeminiUsageProbe(), settingsRepository: settingsRepository),
-            AntigravityProvider(probe: AntigravityUsageProbe(), settingsRepository: settingsRepository),
+            AntigravityProvider(
+                probe: FallbackUsageProbe(
+                    primary: AntigravityAccountsProbe(),
+                    fallback: AntigravityUsageProbe()
+                ),
+                settingsRepository: settingsRepository
+            ),
             ZaiProvider(
                 probe: ZaiUsageProbe(settingsRepository: settingsRepository),
                 settingsRepository: settingsRepository

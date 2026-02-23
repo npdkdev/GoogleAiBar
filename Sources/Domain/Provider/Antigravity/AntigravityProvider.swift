@@ -1,9 +1,6 @@
 import Foundation
 import Observation
 
-/// Antigravity AI provider - a rich domain model.
-/// Observable class with its own state (isSyncing, snapshot, error).
-/// Owns its probe and manages its own data lifecycle.
 @Observable
 public final class AntigravityProvider: AIProvider, @unchecked Sendable {
     // MARK: - Identity (Protocol Requirement)
@@ -12,15 +9,9 @@ public final class AntigravityProvider: AIProvider, @unchecked Sendable {
     public let name: String = "Antigravity"
     public let cliCommand: String = "antigravity"
 
-    public var dashboardURL: URL? {
-        nil  // Antigravity is local-only, no dashboard
-    }
+    public var dashboardURL: URL? { nil }
+    public var statusPageURL: URL? { nil }
 
-    public var statusPageURL: URL? {
-        nil  // No external status page
-    }
-
-    /// Whether the provider is enabled (persisted via settingsRepository)
     public var isEnabled: Bool {
         didSet {
             settingsRepository.setEnabled(isEnabled, forProvider: id)
@@ -29,26 +20,17 @@ public final class AntigravityProvider: AIProvider, @unchecked Sendable {
 
     // MARK: - State (Observable)
 
-    /// Whether the provider is currently syncing data
     public private(set) var isSyncing: Bool = false
-
-    /// The current usage snapshot (nil if never refreshed or unavailable)
     public private(set) var snapshot: UsageSnapshot?
-
-    /// The last error that occurred during refresh
     public private(set) var lastError: Error?
 
     // MARK: - Internal
 
-    /// The probe used to fetch usage data
     private let probe: any UsageProbe
     private let settingsRepository: any ProviderSettingsRepository
 
     // MARK: - Initialization
 
-    /// Creates an Antigravity provider with the specified probe
-    /// - Parameter probe: The probe to use for fetching usage data
-    /// - Parameter settingsRepository: The repository for persisting settings
     public init(probe: any UsageProbe, settingsRepository: any ProviderSettingsRepository) {
         self.probe = probe
         self.settingsRepository = settingsRepository
@@ -61,8 +43,6 @@ public final class AntigravityProvider: AIProvider, @unchecked Sendable {
         await probe.isAvailable()
     }
 
-    /// Refreshes the usage data and updates the snapshot.
-    /// Sets isSyncing during refresh and captures any errors.
     @discardableResult
     public func refresh() async throws -> UsageSnapshot {
         isSyncing = true

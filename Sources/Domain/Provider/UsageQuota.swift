@@ -18,6 +18,10 @@ public struct UsageQuota: Sendable, Equatable, Hashable, Comparable {
     /// Raw reset text from CLI (e.g., "Resets 11am", "Resets Jan 15")
     public let resetText: String?
 
+    /// The account email this quota belongs to (for multi-account providers, e.g., Antigravity).
+    /// nil for providers with a single account.
+    public let accountEmail: String?
+
     // MARK: - Initialization
 
     public init(
@@ -25,13 +29,15 @@ public struct UsageQuota: Sendable, Equatable, Hashable, Comparable {
         quotaType: QuotaType,
         providerId: String,
         resetsAt: Date? = nil,
-        resetText: String? = nil
+        resetText: String? = nil,
+        accountEmail: String? = nil
     ) {
         self.percentRemaining = min(100, percentRemaining)  // Allow negative, cap at 100
         self.quotaType = quotaType
         self.providerId = providerId
         self.resetsAt = resetsAt
         self.resetText = resetText
+        self.accountEmail = accountEmail
     }
 
     // MARK: - Domain Behavior
