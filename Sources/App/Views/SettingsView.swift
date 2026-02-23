@@ -2478,7 +2478,7 @@ struct SettingsContentView: View {
             .buttonStyle(.plain)
 
             // Help text
-            Text("Opens ClaudeBar.log in TextEdit")
+            Text("Opens GoogleAIBar.log in TextEdit")
                 .font(.system(size: 9, weight: .semibold, design: theme.fontDesign))
                 .foregroundStyle(theme.textTertiary)
         }
@@ -2613,7 +2613,7 @@ struct SettingsContentView: View {
                     .font(.system(size: 14, weight: .bold, design: theme.fontDesign))
                     .foregroundStyle(theme.textPrimary)
 
-                Text("Start ClaudeBar when you log in")
+                Text("Start GoogleAIBar when you log in")
                     .font(.system(size: 10, weight: .medium, design: theme.fontDesign))
                     .foregroundStyle(theme.textTertiary)
             }

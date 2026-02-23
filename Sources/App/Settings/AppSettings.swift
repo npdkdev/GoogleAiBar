@@ -2,7 +2,7 @@ import Foundation
 import Domain
 import ServiceManagement
 
-/// Observable settings manager for ClaudeBar preferences.
+/// Observable settings manager for GoogleAIBar preferences.
 /// Note: Provider-specific settings (e.g., Copilot credentials) are managed by the providers themselves.
 @MainActor
 @Observable

@@ -6,11 +6,11 @@ import Sparkle
 #endif
 
 extension Notification.Name {
-    static let hookSettingsChanged = Notification.Name("com.tddworks.claudebar.hookSettingsChanged")
+    static let hookSettingsChanged = Notification.Name("com.tddworks.googleaibar.hookSettingsChanged")
 }
 
 @main
-struct ClaudeBarApp: App {
+struct GoogleAIBarApp: App {
     /// The main domain service - monitors all AI providers
     /// This is the single source of truth for providers and their state
     @State private var monitor: QuotaMonitor
@@ -38,7 +38,7 @@ struct ClaudeBarApp: App {
     init() {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-        AppLog.ui.info("ClaudeBar v\(version) (\(build)) initializing...")
+        AppLog.ui.info("GoogleAIBar v\(version) (\(build)) initializing...")
 
         // Create the shared repository
         // UserDefaultsProviderSettingsRepository implements all sub-protocols:
@@ -115,7 +115,7 @@ struct ClaudeBarApp: App {
         // Note: Notification permission is requested in onAppear, not here
         // Menu bar apps need the run loop to be active before requesting permissions
 
-        AppLog.ui.info("ClaudeBar initialization complete")
+        AppLog.ui.info("GoogleAIBar initialization complete")
     }
 
     /// App settings for theme
